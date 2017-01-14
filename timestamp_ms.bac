@@ -1,0 +1,36 @@
+PRAGMA INCLUDE <time.h>
+PROTO clock_gettime
+PROTO struct
+OPTION MEMSTREAM TRUE
+CONST Block = 20
+mem = MEMORY(Block)
+
+OPEN mem FOR MEMORY AS mem$
+
+OPEN "/dev/stdin" FOR DEVICE AS in
+
+WHILE TRUE
+
+    'IF WAIT(in, 50) = 0 THEN BREAK
+    GETBYTE mem$ FROM in CHUNK Block SIZE received
+    POKE mem+received,0:' add string terminator to received data
+    r=time_ms()
+    PRINT "<",mem$;
+
+WEND
+
+FUNCTION time_ms ()
+   struct timespec (spec)
+   clock_gettime(CLOCK_REALTIME, &spec)
+   PRINT DAY(spec.tv_sec),".",MONTH (spec.tv_sec),".",YEAR(spec.tv_sec),"-", \
+   HOUR(spec.tv_sec),":",MINUTE(spec.tv_sec),":",SECOND(spec.tv_sec);
+   'PRINT "Seconds:     ", spec.tv_sec
+   'PRINT "Nanoseconds: ", spec.tv_nsec
+   PRINT ":",LEFT$(STR$(spec.tv_nsec),3); :' cut milliseconds
+   RETURN 1
+END FUNCTION
+
+CLOSE DEVICE in
+CLOSE MEMORY mem$
+FREE mem
+

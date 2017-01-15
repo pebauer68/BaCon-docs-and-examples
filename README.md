@@ -9,3 +9,6 @@ Here you can find some documentation and examples how to use BaCon
 
 Why use scripting or a JIT compiler when it is easy to have 
 faster code compiled to C code ?
+
+Small BaCon overview Online:
+https://drive.google.com/file/d/0B1WmAU8rLxiBTXpZLVFjLWJQeU0/view
